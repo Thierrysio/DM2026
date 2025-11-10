@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 
-namespace DantecMarketApp.Converters
+namespace DM2026.Converters
 {
     /// <summary>
     /// Convertit une chaîne en booléen indiquant si elle n'est pas vide.

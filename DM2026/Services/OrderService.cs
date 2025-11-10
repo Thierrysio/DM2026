@@ -1,8 +1,8 @@
-﻿using DantecMarketApp.Models;
+﻿using DM2026.Models;
 using System.Text;
 using System.Text.Json;
 
-namespace DantecMarketApp.Services
+namespace DM2026.Services
 {
     /// <summary>
     /// Service responsable de la gestion des commandes utilisateur,

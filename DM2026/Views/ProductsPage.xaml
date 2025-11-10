@@ -8,8 +8,8 @@
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="DantecMarketApp.Views.ProductsPage"
-             xmlns:models="clr-namespace:DantecMarketApp.Models"
+             x:Class="DM2026.Views.ProductsPage"
+             xmlns:models="clr-namespace:DM2026.Models"
              Title="Nos produits"
              BackgroundColor="#FAF7F2">
 

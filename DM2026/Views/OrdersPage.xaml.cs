@@ -1,7 +1,7 @@
-using DantecMarketApp.ViewModels;
-using DantecMarketApp.Services;
+using DM2026.ViewModels;
+using DM2026.Services;
 
-namespace DantecMarketApp.Views
+namespace DM2026.Views
 {
     /// <summary>
     /// Page de gestion et d'affichage des commandes de l'utilisateur.

@@ -5,11 +5,11 @@ using System.Collections.ObjectModel;   // Pour utiliser les collections observa
 using System.ComponentModel;            // Pour l'interface INotifyPropertyChanged
 using System.Runtime.CompilerServices;  // Pour l'attribut CallerMemberName
 using System.Windows.Input;             // Pour les commandes
-using DantecMarketApp.Models;           // Pour accéder aux modèles de données
-using DantecMarketApp.Services;         // Pour accéder aux services
-using DantecMarketApp.Views;            // Pour la navigation entre vues
+using DM2026.Models;           // Pour accéder aux modèles de données
+using DM2026.Services;         // Pour accéder aux services
+using DM2026.Views;            // Pour la navigation entre vues
 
-namespace DantecMarketApp.ViewModels
+namespace DM2026.ViewModels
 {
     // Classe ViewModel pour la gestion des commandes, implémente INotifyPropertyChanged pour la liaison de données
     public class OrdersViewModel : INotifyPropertyChanged

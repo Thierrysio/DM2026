@@ -6,9 +6,9 @@ et permet de filtrer, consulter les détails, et annuler les commandes selon leu
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="DantecMarketApp.Views.OrdersPage"
-             xmlns:converters="clr-namespace:DantecMarketApp.Converters"
-             xmlns:models="clr-namespace:DantecMarketApp.Models"
+             x:Class="DM2026.Views.OrdersPage"
+             xmlns:converters="clr-namespace:DM2026.Converters"
+             xmlns:models="clr-namespace:DM2026.Models"
              Title="Mes Commandes"
              BackgroundColor="#F7F7F7">
 

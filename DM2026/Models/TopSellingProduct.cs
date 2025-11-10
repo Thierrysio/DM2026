@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace DantecMarketApp.Models
+namespace DM2026.Models
 {
     public class TopSellingProduct
     {

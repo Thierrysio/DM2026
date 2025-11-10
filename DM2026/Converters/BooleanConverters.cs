@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace DantecMarketApp.Converters
+namespace DM2026.Converters
 {
     /// <summary>
     /// Convertit un booléen en son inverse (vrai devient faux et vice versa).

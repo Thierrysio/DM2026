@@ -1,6 +1,6 @@
-﻿using DantecMarketApp.Models;
+﻿using DM2026.Models;
 
-namespace DantecMarketApp.Services
+namespace DM2026.Services
 {
     /// <summary>
     /// Service gérant les informations de l'utilisateur et son authentification

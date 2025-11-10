@@ -1,8 +1,8 @@
 namespace DantecMarketApp.Views;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using DantecMarketApp.ViewModels;
-using DantecMarketApp.Services;
+using DM2026.ViewModels;
+using DM2026.Services;
 
 public partial class LoginPage : ContentPage
 {

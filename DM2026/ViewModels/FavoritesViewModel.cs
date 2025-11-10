@@ -5,10 +5,10 @@ using System.Collections.ObjectModel;   // Pour utiliser les collections observa
 using System.ComponentModel;            // Pour l'interface INotifyPropertyChanged
 using System.Runtime.CompilerServices;  // Pour l'attribut CallerMemberName
 using System.Windows.Input;             // Pour les commandes
-using DantecMarketApp.Models;           // Pour accéder aux modèles de données
-using DantecMarketApp.Services;         // Pour accéder aux services
+using DM2026.Models;           // Pour accéder aux modèles de données
+using DM2026.Services;         // Pour accéder aux services
 
-namespace DantecMarketApp.ViewModels
+namespace DM2026.ViewModels
 {
     // Classe ViewModel pour la gestion des favoris, implémente INotifyPropertyChanged pour la liaison de données
     public class FavoritesViewModel : INotifyPropertyChanged

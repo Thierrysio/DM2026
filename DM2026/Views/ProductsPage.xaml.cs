@@ -1,10 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text.Json;
-using DantecMarketApp.Models;
-using DantecMarketApp.ViewModels;
+using DM2026.Models;
+using DM2026.ViewModels;
 
-namespace DantecMarketApp.Views
+namespace DM2026.Views
 {
     public partial class ProductsPage : ContentPage
     {

@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace DantecMarketApp.Converters
+namespace DM2026.Converters
 {
     /// <summary>
     /// Convertit une valeur booléenne en entier selon le paramètre fourni.

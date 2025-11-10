@@ -1,11 +1,11 @@
-﻿using DantecMarketApp.Models;
-using DantecMarketApp.Services;
+﻿using DM2026.Models;
+using DM2026.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace DantecMarketApp.ViewModels
+namespace DM2026.ViewModels
 {
     /// <summary>
     /// ViewModel pour la gestion du panier et la réservation des commandes

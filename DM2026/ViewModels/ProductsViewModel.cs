@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using DantecMarketApp.Models;
+using DM2026.Models;
 
-namespace DantecMarketApp.ViewModels
+namespace DM2026.ViewModels
 {
     /// <summary>
     /// ViewModel pour gérer l'affichage et le tri des produits

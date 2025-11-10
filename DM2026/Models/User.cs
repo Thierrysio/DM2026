@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DantecMarketApp.Models
+namespace DM2026.Models
 {
     public class User
     {

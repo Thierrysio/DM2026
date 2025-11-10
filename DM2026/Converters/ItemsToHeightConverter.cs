@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace DantecMarketApp.Converters
+namespace DM2026.Converters
 {
     /// <summary>
     /// Convertit un nombre d'éléments en hauteur pour l'interface utilisateur.

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using System.Globalization;
 
-namespace DantecMarketApp.Models
+namespace DM2026.Models
 {
     public class TimeSlot
     {

@@ -2,9 +2,9 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using DantecMarketApp.Models;
+using DM2026.Models;
 
-namespace DantecMarketApp.Services
+namespace DM2026.Services
 {
     /// <summary>
     /// Service responsable de la récupération des données des produits depuis l'API.

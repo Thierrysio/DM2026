@@ -1,8 +1,8 @@
-using DantecMarketApp.Models;
+using DM2026.Models;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 
-namespace DantecMarketApp.Views
+namespace DM2026.Views
 {
     public partial class PromotionsPage : ContentPage
     {

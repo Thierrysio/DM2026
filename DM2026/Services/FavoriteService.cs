@@ -2,9 +2,9 @@
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using DantecMarketApp.Models;
+using DM2026.Models;
 
-namespace DantecMarketApp.Services
+namespace DM2026.Services
 {
     /// <summary>
     /// Service responsable de la gestion des produits favoris de l'utilisateur.

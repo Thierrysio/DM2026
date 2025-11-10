@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;  // Pour l'attribut CallerMemberName
 using System.Text;                      // Pour la classe StringBuilder
 using System.Text.Json;                 // Pour la sérialisation/désérialisation JSON
 using System.Windows.Input;             // Pour les commandes
-using DantecMarketApp.Models;           // Pour accéder aux modèles de données
+using DM2026.Models;           // Pour accéder aux modèles de données
 using System.Text.RegularExpressions;   // Pour les expressions régulières (validation d'email)
-using DantecMarketApp.Services;         // Pour accéder aux services
-using DantecMarketApp.Views;            // Pour la navigation entre vues
+using DM2026.Services;         // Pour accéder aux services
+using DM2026.Views;            // Pour la navigation entre vues
 
-namespace DantecMarketApp.ViewModels
+namespace DM2026.ViewModels
 {
     // Classe ViewModel pour la gestion de la connexion, implémente INotifyPropertyChanged pour la liaison de données
     public class LoginViewModel : INotifyPropertyChanged

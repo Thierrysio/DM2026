@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using DantecMarketApp.Models;
+using DM2026.Models;
 
-namespace DantecMarketApp.Converters
+namespace DM2026.Converters
 {
     /// <summary>
     /// Convertit un produit en affichage de prix, en tenant compte des promotions.

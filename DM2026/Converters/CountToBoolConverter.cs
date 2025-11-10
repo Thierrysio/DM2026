@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace DantecMarketApp.Converters
+namespace DM2026.Converters
 {
     /// <summary>
     /// Convertit un nombre en booléen en le comparant à une valeur spécifiée.

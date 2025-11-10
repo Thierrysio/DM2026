@@ -1,9 +1,9 @@
-using DantecMarketApp.Models;
-using DantecMarketApp.Services;
-using DantecMarketApp.ViewModels;
+using DM2026.Models;
+using DM2026.Services;
+using DM2026.ViewModels;
 using System.Collections.ObjectModel;
 
-namespace DantecMarketApp.Views;
+namespace DM2026.Views;
 public partial class HomePage : ContentPage
 {
     private readonly User _user;

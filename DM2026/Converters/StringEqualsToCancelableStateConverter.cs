@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace DantecMarketApp.Converters
+namespace DM2026.Converters
 {
     /// <summary>
     /// Convertit l'état d'une commande en booléen indiquant si elle peut être annulée.

@@ -1,8 +1,8 @@
-using DantecMarketApp.Models;
-using DantecMarketApp.ViewModels;
+using DM2026.Models;
+using DM2026.ViewModels;
 using System.Net.Http.Json;
 
-namespace DantecMarketApp.Views
+namespace DM2026.Views
 {
     public partial class FavoritesPage : ContentPage
     {

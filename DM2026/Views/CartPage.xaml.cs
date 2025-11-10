@@ -8,10 +8,10 @@
  * - Charge les articles du panier depuis le serveur lors de l'apparition de la page
  */
 
-using DantecMarketApp.Models;
-using DantecMarketApp.ViewModels;
+using DM2026.Models;
+using DM2026.ViewModels;
 
-namespace DantecMarketApp.Views
+namespace DM2026.Views
 {
     public partial class CartPage : ContentPage
     {

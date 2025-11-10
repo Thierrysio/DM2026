@@ -1,7 +1,7 @@
-using DantecMarketApp.Models;
-using DantecMarketApp.Services;
+using DM2026.Models;
+using DM2026.Services;
 
-namespace DantecMarketApp.Views
+namespace DM2026.Views
 {
     public partial class ProductDetailPage : ContentPage
     {

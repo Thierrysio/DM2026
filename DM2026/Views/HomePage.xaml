@@ -11,8 +11,8 @@ Cette page contient:
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="DantecMarketApp.Views.HomePage"
-             xmlns:converters="clr-namespace:DantecMarketApp.Converters"
+             x:Class="DM2026.Views.HomePage"
+             xmlns:converters="clr-namespace:DM2026.Converters"
              Title="Dantec Market"
              BackgroundColor="#FAF7F2">
 

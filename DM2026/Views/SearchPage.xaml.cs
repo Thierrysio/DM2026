@@ -1,10 +1,10 @@
-using DantecMarketApp.Models;
+using DM2026.Models;
 using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Windows.Input;
 
-namespace DantecMarketApp.Views
+namespace DM2026.Views
 {
     public partial class SearchPage : ContentPage
     {
