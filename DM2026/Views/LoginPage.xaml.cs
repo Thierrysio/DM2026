@@ -1,4 +1,4 @@
-namespace DantecMarketApp.Views;
+namespace DM2026.Views;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using DM2026.ViewModels;
@@ -11,7 +11,7 @@ public partial class LoginPage : ContentPage
         InitializeComponent();
         var viewModel = new LoginViewModel();
 
-        // Charger les informations sauvegardées si "Se souvenir de moi" était coché
+        // Charger les informations sauvegardÃ©es si "Se souvenir de moi" Ã©tait cochÃ©
         if (Preferences.Get("RememberMe", false))
         {
             viewModel.Email = Preferences.Get("CurrentUserEmail", string.Empty);
