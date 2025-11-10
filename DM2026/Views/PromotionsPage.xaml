@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+    Page spécifique aux produits en promotion
+    - Utilise une mise en page similaire à ProductsPage avec modifications pour les promotions
+    - Présente les produits avec leurs réductions et prix barrés
+    - Couleur prédominante rouge (#F44336) pour l'identité visuelle des promotions
+    - Affiche les détails des promotions (catégorie et date de fin)
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DantecMarketApp.Views.PromotionsPage"
+             xmlns:models="clr-namespace:DantecMarketApp.Models"
+             Title="Promotions"
+             BackgroundColor="#FAF7F2">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- En-tête avec fond rouge caractéristique des promotions -->
+        <Frame Grid.Row="0" 
+               Padding="15" 
+               BackgroundColor="#F44336" 
+               CornerRadius="0">
+            <Label Text="Nos promotions du moment" 
+                   TextColor="White" 
+                   FontSize="20" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"/>
+        </Frame>
+
+        <!-- 
+            Liste des produits en promotion avec:
+            - Image du produit et badge de pourcentage de réduction
+            - Informations du produit (nom, description, stock)
+            - Détails de la promotion et date de fin
+            - Prix original barré et prix promotionnel
+        -->
+        <ListView Grid.Row="1" 
+                  ItemsSource="{Binding PromotionProducts}"
+                  HasUnevenRows="True"
+                  SelectionMode="Single"
+                  ItemSelected="OnProductSelected"
+                  SeparatorVisibility="Default"
+                  SeparatorColor="#E0E0E0"
+                  BackgroundColor="White"
+                  Margin="0,1,0,0">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Product">
+                    <ViewCell>
+                        <Grid Padding="15" ColumnDefinitions="Auto,*,Auto">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Image du produit avec badge de promotion toujours visible -->
+                            <Frame Grid.Column="0" 
+                                   Grid.RowSpan="2"
+                                   WidthRequest="80" 
+                                   HeightRequest="80" 
+                                   Padding="0" 
+                                   CornerRadius="10" 
+                                   IsClippedToBounds="True">
+                                <Grid>
+                                    <Image Source="{Binding LesImages[0].Url, TargetNullValue='dotnet_bot.png'}" 
+                                           Aspect="AspectFill"/>
+
+                                    <!-- Badge rouge indiquant le pourcentage de réduction (toujours visible) -->
+                                    <Frame BackgroundColor="#F44336"
+                                           CornerRadius="5"
+                                           Padding="5,2"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Start"
+                                           Margin="2">
+                                        <Label Text="{Binding DiscountPercentage, StringFormat='-{0}%'}"
+                                               TextColor="White"
+                                               FontSize="10"
+                                               FontAttributes="Bold"/>
+                                    </Frame>
+                                </Grid>
+                            </Frame>
+
+                            <!-- Informations principales du produit -->
+                            <VerticalStackLayout Grid.Column="1" 
+                                                 Grid.Row="0"
+                                                 VerticalOptions="Start" 
+                                                 Margin="15,0">
+                                <Label Text="{Binding NomProduit}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="#1F1E1C"
+                                       FontSize="16"/>
+                                <Label Text="{Binding DescriptionCourte}" 
+                                       LineBreakMode="TailTruncation" 
+                                       MaxLines="2" 
+                                       TextColor="#666666"
+                                       FontSize="14"/>
+                                <Label Text="{Binding QuantiteDisponible, StringFormat='Stock: {0}'}" 
+                                       TextColor="#2E7D32" 
+                                       FontSize="12"/>
+                            </VerticalStackLayout>
+
+                            <!-- Détails de la promotion (catégorie et date de fin) -->
+                            <StackLayout Grid.Column="1" 
+                                         Grid.Row="1" 
+                                         Orientation="Horizontal"
+                                         Margin="15,5,0,0">
+                                <Frame BackgroundColor="#FFF8E1" 
+                                       Padding="5,2" 
+                                       CornerRadius="5">
+                                    <Label Text="{Binding ActivePromotion.PromotionCategory.Nom}" 
+                                           TextColor="#FF6F00" 
+                                           FontSize="10" 
+                                           FontAttributes="Bold"/>
+                                </Frame>
+                                <Label Text="jusqu'au" 
+                                       FontSize="10" 
+                                       TextColor="#666666" 
+                                       VerticalOptions="Center"
+                                       Margin="5,0"/>
+                                <Label Text="{Binding ActivePromotion.DateFin, StringFormat='{0:dd/MM HH:mm}'}" 
+                                       FontSize="10" 
+                                       TextColor="#666666" 
+                                       VerticalOptions="Center"/>
+                            </StackLayout>
+
+                            <!-- Affichage des prix (normal barré et promotionnel) -->
+                            <StackLayout Grid.Column="2" 
+                                         Grid.RowSpan="2"
+                                         VerticalOptions="Center">
+                                <!-- Prix original toujours barré (contrairement à ProductsPage) -->
+                                <Label Text="{Binding Prix, StringFormat='{0:F2} €'}" 
+                                       TextColor="#9E9E9E" 
+                                       FontSize="12"
+                                       TextDecorations="Strikethrough"/>
+                                <!-- Prix promotionnel avec couleur rouge pour rappeler la promotion -->
+                                <Label Text="{Binding PromotionalPrice, StringFormat='{0:F2} €'}" 
+                                       TextColor="#F44336" 
+                                       FontAttributes="Bold" 
+                                       FontSize="16"/>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.Footer>
+                <StackLayout HeightRequest="20" />
+            </ListView.Footer>
+        </ListView>
+
+        <!-- Indicateur de chargement avec couleur rouge des promotions -->
+        <ActivityIndicator Grid.RowSpan="2" 
+                           IsRunning="{Binding IsLoading}" 
+                           IsVisible="{Binding IsLoading}"
+                           Color="#F44336"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           Scale="2"/>
+
+        <!-- Message affiché lorsqu'aucune promotion n'est disponible -->
+        <StackLayout Grid.Row="1" 
+                     IsVisible="{Binding PromotionProducts.Count, Converter={StaticResource CountToBoolConverter}, ConverterParameter=0}"
+                     VerticalOptions="Center" 
+                     HorizontalOptions="Center"
+                     Margin="20">
+            <Image Source="dotnet_bot.png" HeightRequest="100" Opacity="0.5"/>
+            <Label Text="Aucune promotion en cours" 
+                   TextColor="#666666" 
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,0"
+                   FontSize="18"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>

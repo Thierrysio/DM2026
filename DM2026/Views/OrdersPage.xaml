@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+Page de suivi des commandes utilisateur.
+Cette page affiche la liste des commandes de l'utilisateur avec différentes statistiques
+et permet de filtrer, consulter les détails, et annuler les commandes selon leur état.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DantecMarketApp.Views.OrdersPage"
+             xmlns:converters="clr-namespace:DantecMarketApp.Converters"
+             xmlns:models="clr-namespace:DantecMarketApp.Models"
+             Title="Mes Commandes"
+             BackgroundColor="#F7F7F7">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- 
+            Convertisseurs utilisés dans la page :
+            - StringNotEmptyConverter : Vérifie si une chaîne n'est pas vide
+            - InvertBooleanConverter : Inverse une valeur booléenne
+            - StringEqualsToCancelableStateConverter : Détermine si une commande est annulable en fonction de son état
+            - EtatColorConverter : Associe une couleur à chaque état de commande
+            - ItemsToHeightConverter : Calcule la hauteur en fonction du nombre d'éléments
+            -->
+            <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter" />
+            <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+            <converters:StringEqualsToCancelableStateConverter x:Key="StringEqualsToCancelableStateConverter" />
+            <converters:EtatColorConverter x:Key="EtatColorConverter" />
+            <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
+
+            <!-- 
+            Styles définis pour uniformiser l'apparence des éléments :
+            - StatusBadgeStyle : Style pour les badges d'état
+            - OrderCardStyle : Style pour les cartes de commande
+            - SectionHeaderStyle : Style pour les en-têtes de section
+            - ProductTitleStyle : Style pour les titres de produit
+            - DateLabelStyle : Style pour les dates
+            - PriceLabelStyle : Style pour les prix
+            - CancelButtonStyle : Style pour les boutons d'annulation
+            - InfoIconStyle : Style pour les icônes d'information
+            -->
+            <Style x:Key="StatusBadgeStyle" TargetType="Frame">
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="OrderCardStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="Margin" Value="0,0,0,16" />
+                <Setter Property="BorderColor" Value="#EEEEEE" />
+            </Style>
+
+            <Style x:Key="SectionHeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="#666666" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+            </Style>
+
+            <Style x:Key="ProductTitleStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#212121" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="DateLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="#555555" />
+            </Style>
+
+            <Style x:Key="PriceLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#2E7D32" />
+            </Style>
+
+            <Style x:Key="CancelButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#F44336" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="12,5" />
+                <Setter Property="HeightRequest" Value="36" />
+            </Style>
+
+            <Style x:Key="InfoIconStyle" TargetType="Image">
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="WidthRequest" Value="18" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,0,5,0" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16">
+        <!-- En-tête avec statistiques des commandes groupées par état -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="White" 
+               Padding="16" 
+               CornerRadius="16" 
+               HasShadow="True"
+               BorderColor="#EEEEEE"
+               Margin="0,0,0,16">
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*,*">
+                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,16">
+                    <Label Text="Suivi de commande" 
+                           FontSize="22" 
+                           FontAttributes="Bold" 
+                           TextColor="#212121"
+                           Margin="0,0,0,4"/>
+                    <Label Text="{Binding Orders.Count, StringFormat='{0} commandes en cours'}" 
+                           TextColor="#757575" 
+                           FontSize="16"/>
+                </VerticalStackLayout>
+
+                <!-- Statistiques avec compteurs par état -->
+                <Frame Grid.Row="1" Grid.Column="0" Padding="10" BackgroundColor="#E8F5E9" CornerRadius="12" HasShadow="False" Margin="0,0,8,0">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="En cours" FontSize="12" TextColor="#2E7D32" HorizontalOptions="Center"/>
+                        <Label Text="{Binding ActiveOrdersCount}" FontSize="20" FontAttributes="Bold" TextColor="#2E7D32" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Grid.Row="1" Grid.Column="1" Padding="10" BackgroundColor="#E3F2FD" CornerRadius="12" HasShadow="False" Margin="4,0,4,0">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="À récupérer" FontSize="12" TextColor="#1565C0" HorizontalOptions="Center"/>
+                        <Label Text="{Binding ReadyOrdersCount}" FontSize="20" FontAttributes="Bold" TextColor="#1565C0" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Grid.Row="1" Grid.Column="2" Padding="10" BackgroundColor="#EDE7F6" CornerRadius="12" HasShadow="False" Margin="8,0,0,0">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="Livrées" FontSize="12" TextColor="#4527A0" HorizontalOptions="Center"/>
+                        <Label Text="{Binding DeliveredOrdersCount}" FontSize="20" FontAttributes="Bold" TextColor="#4527A0" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+        </Frame>
+
+        <!-- Liste des commandes avec système de rafraîchissement par tirage -->
+        <RefreshView Grid.Row="1" 
+                     Command="{Binding RefreshOrdersCommand}" 
+                     IsRefreshing="{Binding IsLoading}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="0">
+                    <!-- Filtres pour sélectionner les commandes par état -->
+                    <HorizontalStackLayout Spacing="8" Margin="0,0,0,16" HorizontalOptions="Start">
+                        <Button Text="Toutes" 
+                                BackgroundColor="#EEEEEE" 
+                                TextColor="#212121" 
+                                CornerRadius="20"
+                                HeightRequest="36"
+                                Padding="16,5"
+                                Command="{Binding FilterOrdersCommand}"
+                                CommandParameter="All"/>
+
+                        <Button Text="En cours" 
+                                BackgroundColor="#E8F5E9" 
+                                TextColor="#2E7D32" 
+                                CornerRadius="20"
+                                HeightRequest="36"
+                                Padding="16,5"
+                                Command="{Binding FilterOrdersCommand}"
+                                CommandParameter="Processing"/>
+
+                        <Button Text="Terminées" 
+                                BackgroundColor="#E3F2FD" 
+                                TextColor="#1565C0" 
+                                CornerRadius="20"
+                                HeightRequest="36"
+                                Padding="16,5"
+                                Command="{Binding FilterOrdersCommand}"
+                                CommandParameter="Completed"/>
+                    </HorizontalStackLayout>
+
+                    <!-- Liste principale des commandes avec template détaillé -->
+                    <CollectionView ItemsSource="{Binding Orders}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Order">
+                                <Frame Style="{StaticResource OrderCardStyle}">
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="12">
+                                        <!-- En-tête de la commande avec date et statut -->
+                                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0" 
+                                                   Text="{Binding DateCommande, StringFormat='Commande du {0}'}" 
+                                                   Style="{StaticResource DateLabelStyle}"/>
+
+                                            <Frame Grid.Column="1" 
+                                                   BackgroundColor="{Binding Etat, Converter={StaticResource EtatColorConverter}}"
+                                                   Style="{StaticResource StatusBadgeStyle}">
+                                                <Label Text="{Binding Etat}" 
+                                                       TextColor="White" 
+                                                       FontSize="12" 
+                                                       FontAttributes="Bold"/>
+                                            </Frame>
+                                        </Grid>
+
+                                        <!-- Séparateur visuel entre l'en-tête et les produits -->
+                                        <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="#F0F0F0"/>
+
+                                        <!-- Liste des produits de la commande -->
+                                        <CollectionView Grid.Row="2" 
+                                                        ItemsSource="{Binding LesCommandes}"
+                                                        HeightRequest="{Binding LesCommandes.Count, Converter={StaticResource ItemsToHeightConverter}}">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="models:OrderItem">
+                                                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,8">
+                                                        <Frame Grid.Column="0" 
+                                                               WidthRequest="60" 
+                                                               HeightRequest="60" 
+                                                               Padding="0" 
+                                                               CornerRadius="12" 
+                                                               IsClippedToBounds="True"
+                                                               BorderColor="#EEEEEE"
+                                                               Margin="0,0,12,0">
+                                                            <Image Source="{Binding LeProduit.LesImages[0].Url, TargetNullValue='product_placeholder.png'}" 
+                                                                   Aspect="AspectFill"/>
+                                                        </Frame>
+
+                                                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                                            <Label Text="{Binding LeProduit.NomProduit}" 
+                                                                   Style="{StaticResource ProductTitleStyle}"/>
+                                                            <HorizontalStackLayout>
+                                                                <Label Text="Qté: " 
+                                                                       TextColor="#757575" 
+                                                                       FontSize="14"/>
+                                                                <Label Text="{Binding Quantite}" 
+                                                                       TextColor="#212121" 
+                                                                       FontSize="14"
+                                                                       FontAttributes="Bold"/>
+                                                            </HorizontalStackLayout>
+                                                        </VerticalStackLayout>
+
+                                                        <Label Grid.Column="2" 
+                                                               Text="{Binding PrixRetenu, StringFormat='{0:F2}€'}" 
+                                                               TextColor="#212121" 
+                                                               FontSize="16"
+                                                               FontAttributes="Bold"
+                                                               VerticalOptions="Center"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+
+                                        <!-- Pied de page avec créneau de récupération, total et actions -->
+                                        <Grid Grid.Row="3" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+                                            <!-- Affichage du créneau de récupération s'il existe -->
+                                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" IsVisible="{Binding PlanningDetails, Converter={StaticResource StringNotEmptyConverter}}">
+                                                <Label Text="Créneau de récupération" 
+                                                       FontSize="12" 
+                                                       TextColor="#757575"
+                                                       Margin="0,0,0,4"/>
+
+                                                <HorizontalStackLayout>
+                                                    <Image Source="schedule_icon.png" 
+                                                           Style="{StaticResource InfoIconStyle}"/>
+                                                    <Label Text="{Binding PlanningDetails}" 
+                                                           TextColor="#212121" 
+                                                           FontSize="14"
+                                                           FontAttributes="Bold"/>
+                                                </HorizontalStackLayout>
+                                            </VerticalStackLayout>
+
+                                            <!-- Affichage du montant total -->
+                                            <Label Grid.Row="0" Grid.Column="1" 
+                                                   Text="{Binding MontantTotal, StringFormat='Total : {0:F2}€'}" 
+                                                   Style="{StaticResource PriceLabelStyle}"/>
+
+                                            <!-- Boutons d'action (Détails et Annuler) -->
+                                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                                                   HorizontalOptions="End"
+                                                                   Margin="0,8,0,0">
+                                                <Button Text="Détails" 
+                                                        BackgroundColor="#E0E0E0" 
+                                                        TextColor="#212121"
+                                                        CornerRadius="20"
+                                                        HeightRequest="36"
+                                                        Padding="16,5"
+                                                        Margin="0,0,8,0"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewOrderDetailsCommand}"
+                                                        CommandParameter="{Binding}"/>
+
+                                                <Button Text="Annuler" 
+                                                        Style="{StaticResource CancelButtonStyle}"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.CancelOrderCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        IsVisible="{Binding Etat, Converter={StaticResource StringEqualsToCancelableStateConverter}}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <!-- Vue vide affichée quand aucune commande n'existe -->
+                        <CollectionView.EmptyView>
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" VerticalOptions="Center" Padding="20" RowSpacing="12">
+                                <Image Grid.Row="0" 
+                                       Source="empty_orders.png" 
+                                       HeightRequest="150" 
+                                       HorizontalOptions="Center"/>
+                                <Label Grid.Row="1" 
+                                       Text="Aucune commande" 
+                                       FontSize="22" 
+                                       TextColor="#212121" 
+                                       HorizontalOptions="Center"
+                                       FontAttributes="Bold"/>
+                                <Label Grid.Row="2" 
+                                       Text="Vos commandes apparaîtront ici" 
+                                       TextColor="#757575" 
+                                       FontSize="16" 
+                                       HorizontalOptions="Center"/>
+                                <Button Grid.Row="3"
+                                        Text="Explorer les produits"
+                                        BackgroundColor="#2E7D32"
+                                        TextColor="White"
+                                        CornerRadius="24"
+                                        Padding="24,12"
+                                        Margin="0,16,0,0"
+                                        HorizontalOptions="Center"
+                                        Command="{Binding GoToProductsCommand}"/>
+                            </Grid>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <!-- Indicateur de chargement superposé -->
+        <Grid Grid.RowSpan="2" 
+              BackgroundColor="#80000000"
+              IsVisible="{Binding IsLoading}">
+            <Frame BackgroundColor="White"
+                   CornerRadius="12"
+                   WidthRequest="100"
+                   HeightRequest="100"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   HasShadow="True">
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                                      Color="#2E7D32"
+                                      HeightRequest="40"
+                                      WidthRequest="40"/>
+                    <Label Text="Chargement..."
+                           TextColor="#757575"
+                           Margin="0,8,0,0"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+    </Grid>
+</ContentPage>

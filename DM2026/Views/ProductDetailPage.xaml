@@ -1,0 +1,170 @@
+<!-- 
+Page de détail du produit.
+Cette page affiche les informations détaillées d'un produit, incluant son image, 
+son prix (normal ou promotionnel), sa description et permet d'ajouter le produit au panier.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DantecMarketApp.Views.ProductDetailPage"
+             Title="{Binding NomProduit}"
+             BackgroundColor="#FAF7F2">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="15">
+            <!-- Container pour l'image du produit et le bouton favoris -->
+            <Grid>
+                <!-- Image du produit avec badge de promotion si applicable -->
+                <Frame Padding="0" 
+                       CornerRadius="15" 
+                       IsClippedToBounds="True" 
+                       HasShadow="True"
+                       BackgroundColor="White">
+                    <Grid>
+                        <Image Source="{Binding LesImages[0].Url, TargetNullValue='dotnet_bot.png'}" 
+                               Aspect="AspectFill" 
+                               HeightRequest="250"/>
+
+                        <!-- Badge de promotion visible uniquement quand le produit est en promotion -->
+                        <Frame IsVisible="{Binding HasActivePromotion}"
+                               BackgroundColor="#F44336"
+                               CornerRadius="10"
+                               Padding="10,5"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Start"
+                               Margin="10">
+                            <Label Text="{Binding DiscountPercentage, StringFormat='-{0}%'}"
+                                   TextColor="White"
+                                   FontSize="16"
+                                   FontAttributes="Bold"/>
+                        </Frame>
+                    </Grid>
+                </Frame>
+
+                <!-- Bouton favoris flottant en bas à droite de l'image -->
+                <Frame HeightRequest="45" 
+                       WidthRequest="45" 
+                       CornerRadius="22.5" 
+                       BackgroundColor="White" 
+                       HasShadow="True"
+                       Padding="0"
+                       HorizontalOptions="End" 
+                       VerticalOptions="End" 
+                       Margin="0,0,15,15">
+                    <ImageButton x:Name="FavoriteButton"
+                                 Source="heart_unfilled.png"
+                                 HeightRequest="24"
+                                 WidthRequest="24"
+                                 BackgroundColor="Transparent"
+                                 Clicked="OnFavoriteClicked"/>
+                </Frame>
+            </Grid>
+
+            <!-- Informations principales du produit (nom, prix, état du stock) -->
+            <Frame BackgroundColor="White" 
+                   Padding="20" 
+                   CornerRadius="15" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding NomProduit}" 
+                           FontSize="24" 
+                           FontAttributes="Bold" 
+                           TextColor="#1F1E1C"/>
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                        <!-- Prix original barré si le produit est en promotion -->
+                        <Label Grid.Row="0" 
+                               Grid.Column="0"
+                               IsVisible="{Binding HasActivePromotion}"
+                               Text="{Binding Prix, StringFormat='{0:F2} €'}" 
+                               TextColor="#9E9E9E" 
+                               FontSize="16"
+                               TextDecorations="Strikethrough"/>
+
+                        <!-- Prix actuel (normal ou promotionnel selon le cas) -->
+                        <Label Grid.Row="{Binding HasActivePromotion, Converter={StaticResource BoolToIntConverter}, ConverterParameter='1:0'}" 
+                               Grid.Column="0"
+                               Text="{Binding PromotionalPrice, StringFormat='{0:F2} €'}" 
+                               TextColor="#F4B942" 
+                               FontSize="22" 
+                               FontAttributes="Bold"/>
+
+                        <!-- Badge indiquant la quantité en stock -->
+                        <Frame Grid.Column="1" 
+                               Grid.Row="0"
+                               BackgroundColor="#E8F5E9" 
+                               Padding="10,5" 
+                               CornerRadius="10">
+                            <Label Text="{Binding QuantiteDisponible, StringFormat='Stock: {0}'}" 
+                                   TextColor="#2E7D32" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"/>
+                        </Frame>
+                    </Grid>
+
+                    <!-- Informations de promotion avec dates de validité -->
+                    <StackLayout IsVisible="{Binding HasActivePromotion}" 
+                                 Orientation="Horizontal" 
+                                 Spacing="5" 
+                                 Margin="0,5,0,0">
+                        <Frame BackgroundColor="#FFF8E1" 
+                               Padding="10,5" 
+                               CornerRadius="10">
+                            <Label Text="{Binding ActivePromotion.PromotionCategory.Nom}" 
+                                   TextColor="#FF6F00" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"/>
+                        </Frame>
+                        <Label Text="jusqu'au" 
+                               FontSize="14" 
+                               TextColor="#666666" 
+                               VerticalOptions="Center"/>
+                        <Label Text="{Binding ActivePromotion.DateFin, StringFormat='{0:dd/MM à HH:mm}'}" 
+                               FontSize="14" 
+                               TextColor="#666666" 
+                               VerticalOptions="Center"/>
+                    </StackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Description détaillée du produit -->
+            <Frame BackgroundColor="White" 
+                   Padding="20" 
+                   CornerRadius="15" 
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Description" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="#1F1E1C"/>
+
+                    <Label Text="{Binding CleanDescription}" 
+                           TextColor="#666666" 
+                           FontSize="14"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Bouton principal pour ajouter le produit au panier -->
+            <Button Text="Ajouter au panier" 
+                    BackgroundColor="#F4B942" 
+                    TextColor="White" 
+                    FontAttributes="Bold"
+                    CornerRadius="25" 
+                    HeightRequest="50" 
+                    Margin="0,10"
+                    Clicked="OnAddToCartClicked"/>
+
+            <!-- Bouton secondaire pour accéder directement au panier -->
+            <Button Text="Voir mon panier" 
+                    BackgroundColor="Transparent" 
+                    TextColor="#1F1E1C" 
+                    BorderColor="#F4B942"
+                    BorderWidth="1"
+                    FontAttributes="Bold"
+                    CornerRadius="25" 
+                    HeightRequest="50" 
+                    Margin="0,0,0,20"
+                    Clicked="OnViewCartClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

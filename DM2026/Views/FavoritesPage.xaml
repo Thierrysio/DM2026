@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+FavoritesPage.xaml
+Cette page affiche les produits favoris de l'utilisateur.
+Fonctionnalités:
+- Liste des produits marqués comme favoris
+- Possibilité de retirer des produits des favoris
+- Navigation vers la page détaillée du produit
+- Vue spéciale lorsque la liste des favoris est vide
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DantecMarketApp.Views.FavoritesPage"
+             Title="Mes Favoris"
+             BackgroundColor="#FAF7F2">
+
+    <Grid RowDefinitions="Auto,*" Padding="15">
+        <!-- En-tête avec titre et description -->
+        <Frame Grid.Row="0" 
+       BackgroundColor="White" 
+       Padding="15" 
+       CornerRadius="15" 
+       HasShadow="True"
+       Margin="0,0,0,15">
+            <Grid ColumnDefinitions="Auto,*">
+                <Image Grid.Column="0" 
+               Source="dotnet_bot.png" 
+               HeightRequest="50" 
+               WidthRequest="50" 
+               Margin="0,0,15,0"/>
+
+                <VerticalStackLayout Grid.Column="1">
+                    <Label Text="Mes Favoris" 
+                   FontSize="18" 
+                   FontAttributes="Bold" 
+                   TextColor="#1F1E1C"/>
+                    <Label Text="Retrouvez ici tous vos produits préférés" 
+                   TextColor="#666666" 
+                   FontSize="14"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Frame>
+
+        <!-- Liste des produits favoris avec RefreshView pour actualisation -->
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsLoading}">
+            <CollectionView ItemsSource="{Binding Favorites}"
+                            SelectionMode="None">
+                <!-- Vue affichée quand la liste des favoris est vide -->
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="15" Padding="20">
+                        <Image Source="heart_unfilled.png" HeightRequest="100" Opacity="0.5"/>
+                        <Label Text="Vous n'avez pas encore ajouté de produits à vos favoris" 
+                               TextColor="#666666" 
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"/>
+                        <Button Text="Découvrir les produits" 
+                                BackgroundColor="#F4B942" 
+                                TextColor="White"
+                                CornerRadius="20"
+                                HeightRequest="45"
+                                Margin="20,15"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BrowseProductsCommand}"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <!-- Template pour chaque produit favori -->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,0,0,15" 
+                               Padding="0" 
+                               HasShadow="True" 
+                               CornerRadius="15" 
+                               IsClippedToBounds="True"
+                               BackgroundColor="White"
+                               BorderColor="Transparent">
+                            <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto">
+                                <!-- Conteneur pour l'image et le bouton de favoris -->
+                                <Grid Grid.Column="0" Grid.RowSpan="3">
+                                    <!-- Image du produit -->
+                                    <Frame Padding="0" 
+                                           CornerRadius="12" 
+                                           Margin="10" 
+                                           IsClippedToBounds="True" 
+                                           BorderColor="Transparent">
+                                        <Image Source="{Binding FullImageUrl, TargetNullValue='dotnet_bot.png'}" 
+                                               Aspect="AspectFill" 
+                                               HeightRequest="90" 
+                                               WidthRequest="90"/>
+                                    </Frame>
+
+                                    <!-- Bouton pour retirer des favoris -->
+                                    <Frame HeightRequest="32" 
+                                           WidthRequest="32" 
+                                           CornerRadius="16" 
+                                           BackgroundColor="White" 
+                                           HasShadow="True"
+                                           Padding="0"
+                                           HorizontalOptions="End" 
+                                           VerticalOptions="Start" 
+                                           Margin="0,5,5,0">
+                                        <ImageButton Source="heart_filled.png"
+                                                     BackgroundColor="Transparent"
+                                                     Margin="0"
+                                                     HeightRequest="20"
+                                                     WidthRequest="20"
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveFavoriteCommand}"
+                                                     CommandParameter="{Binding Id}"/>
+                                    </Frame>
+                                </Grid>
+
+                                <!-- Nom du produit -->
+                                <Label Grid.Column="1" 
+                                       Grid.Row="0" 
+                                       Text="{Binding NomProduit}" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold" 
+                                       TextColor="#1F1E1C"
+                                       LineBreakMode="TailTruncation"
+                                       Margin="0,15,15,5"/>
+
+                                <!-- Prix du produit -->
+                                <Label Grid.Column="1" 
+                                       Grid.Row="1" 
+                                       Text="{Binding Prix, StringFormat='{0:F2} €'}" 
+                                       TextColor="#F4B942" 
+                                       FontSize="18" 
+                                       FontAttributes="Bold"
+                                       Margin="0,0,15,10"/>
+
+                                <!-- Bouton pour voir le détail du produit -->
+                                <Button Grid.Column="1" 
+                                        Grid.Row="2"
+                                        Text="Voir le produit" 
+                                        Margin="0,0,15,15"
+                                        BackgroundColor="#F4B942" 
+                                        TextColor="White" 
+                                        FontAttributes="Bold"
+                                        FontSize="13"
+                                        CornerRadius="20"
+                                        HeightRequest="36"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=ViewProductCommand}"
+                                        CommandParameter="{Binding Id}"/>
+                            </Grid>
+
+                            <!-- Rend toute la Frame cliquable pour aller vers le détail du produit -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=ViewProductCommand}"
+                                                      CommandParameter="{Binding Id}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Indicateur de chargement (spinner) -->
+        <ActivityIndicator Grid.Row="1" 
+                           IsRunning="{Binding IsLoading}" 
+                           IsVisible="{Binding IsLoading}"
+                           Color="#F4B942"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           HeightRequest="50"
+                           WidthRequest="50"/>
+    </Grid>
+</ContentPage>

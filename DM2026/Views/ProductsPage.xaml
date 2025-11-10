@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+    Page affichant la liste complète des produits disponibles
+    - Permet le tri par nom, prix et stock
+    - Affiche les détails produits avec images, descriptions et prix
+    - Gère l'affichage des promotions actives
+    - Inclut des indicateurs de chargement et message si aucun produit
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DantecMarketApp.Views.ProductsPage"
+             xmlns:models="clr-namespace:DantecMarketApp.Models"
+             Title="Nos produits"
+             BackgroundColor="#FAF7F2">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- En-tête avec la bannière "Tous nos produits" -->
+        <Frame Grid.Row="0" 
+               Padding="15" 
+               BackgroundColor="#1F1E1C" 
+               CornerRadius="0">
+            <Label Text="Tous nos produits" 
+                   TextColor="White" 
+                   FontSize="20" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"/>
+        </Frame>
+
+        <!-- 
+            Barre d'options de tri avec boutons pour trier par:
+            - Nom (ordre alphabétique)
+            - Prix (croissant/décroissant)
+            - Stock (quantité disponible)
+            - Bouton pour inverser l'ordre de tri
+        -->
+        <Frame Grid.Row="1"
+               Padding="10,5"
+               BackgroundColor="White"
+               BorderColor="#EEEEEE"
+               HasShadow="False">
+            <HorizontalStackLayout Spacing="5" HorizontalOptions="Center">
+                <Label Text="Trier par :" 
+                       VerticalOptions="Center"
+                       TextColor="#666666"/>
+                <Button Text="Nom" 
+                        Command="{Binding SortCommand}"
+                        CommandParameter="nom"
+                        BackgroundColor="{Binding NomSortButtonColor}"
+                        TextColor="White"
+                        FontSize="12"
+                        HeightRequest="30"
+                        WidthRequest="70"
+                        Padding="0"
+                        Margin="2,0"/>
+                <Button Text="Prix" 
+                        Command="{Binding SortCommand}"
+                        CommandParameter="prix"
+                        BackgroundColor="{Binding PrixSortButtonColor}"
+                        TextColor="White"
+                        FontSize="12"
+                        HeightRequest="30"
+                        WidthRequest="70"
+                        Padding="0"
+                        Margin="2,0"/>
+                <Button Text="Stock" 
+                        Command="{Binding SortCommand}"
+                        CommandParameter="stock"
+                        BackgroundColor="{Binding StockSortButtonColor}"
+                        TextColor="White"
+                        FontSize="12"
+                        HeightRequest="30"
+                        WidthRequest="70"
+                        Padding="0"
+                        Margin="2,0"/>
+                <ImageButton Source="{Binding SortDirectionIcon}"
+                             Command="{Binding ToggleSortDirectionCommand}"
+                             HeightRequest="30"
+                             WidthRequest="30"
+                             BackgroundColor="Transparent"
+                             Margin="5,0,0,0"/>
+            </HorizontalStackLayout>
+        </Frame>
+
+        <!-- 
+            Liste principale des produits qui affiche:
+            - Une image du produit
+            - Les informations (nom, description, stock)
+            - Les détails de promotion si applicable
+            - Le prix (barré si promotion + prix promotionnel)
+        -->
+        <ListView Grid.Row="2" 
+                  ItemsSource="{Binding Products}"
+                  HasUnevenRows="True"
+                  SelectionMode="Single"
+                  ItemSelected="OnProductSelected"
+                  SeparatorVisibility="Default"
+                  SeparatorColor="#E0E0E0"
+                  BackgroundColor="White"
+                  Margin="0,1,0,0">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Product">
+                    <ViewCell>
+                        <Grid Padding="15" ColumnDefinitions="Auto,*,Auto">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Image du produit avec badge de promotion si applicable -->
+                            <Frame Grid.Column="0" 
+                                   Grid.RowSpan="2"
+                                   WidthRequest="80" 
+                                   HeightRequest="80" 
+                                   Padding="0" 
+                                   CornerRadius="10" 
+                                   IsClippedToBounds="True">
+                                <Grid>
+                                    <Image Source="{Binding LesImages[0].Url, TargetNullValue='dotnet_bot.png'}" 
+                                           Aspect="AspectFill"/>
+
+                                    <!-- Badge rouge indiquant le pourcentage de réduction -->
+                                    <Frame IsVisible="{Binding HasActivePromotion}"
+                                           BackgroundColor="#F44336"
+                                           CornerRadius="5"
+                                           Padding="5,2"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Start"
+                                           Margin="2">
+                                        <Label Text="{Binding DiscountPercentage, StringFormat='-{0}%'}"
+                                               TextColor="White"
+                                               FontSize="10"
+                                               FontAttributes="Bold"/>
+                                    </Frame>
+                                </Grid>
+                            </Frame>
+
+                            <!-- Informations principales du produit -->
+                            <VerticalStackLayout Grid.Column="1" 
+                                                 Grid.Row="0"
+                                                 VerticalOptions="Start" 
+                                                 Margin="15,0">
+                                <Label Text="{Binding NomProduit}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="#1F1E1C"
+                                       FontSize="16"/>
+                                <Label Text="{Binding DescriptionCourte}" 
+                                       LineBreakMode="TailTruncation" 
+                                       MaxLines="2" 
+                                       TextColor="#666666"
+                                       FontSize="14"/>
+                                <Label Text="{Binding QuantiteDisponible, StringFormat='Stock: {0}'}" 
+                                       TextColor="#2E7D32" 
+                                       FontSize="12"/>
+                            </VerticalStackLayout>
+
+                            <!-- Détails de la promotion (catégorie et date de fin) -->
+                            <StackLayout Grid.Column="1" 
+                                         Grid.Row="1" 
+                                         IsVisible="{Binding HasActivePromotion}"
+                                         Orientation="Horizontal"
+                                         Margin="15,5,0,0">
+                                <Frame BackgroundColor="#FFF8E1" 
+                                       Padding="5,2" 
+                                       CornerRadius="5">
+                                    <Label Text="{Binding ActivePromotion.PromotionCategory.Nom}" 
+                                           TextColor="#FF6F00" 
+                                           FontSize="10" 
+                                           FontAttributes="Bold"/>
+                                </Frame>
+                                <Label Text="jusqu'au" 
+                                       FontSize="10" 
+                                       TextColor="#666666" 
+                                       VerticalOptions="Center"
+                                       Margin="5,0"/>
+                                <Label Text="{Binding ActivePromotion.DateFin, StringFormat='{0:dd/MM HH:mm}'}" 
+                                       FontSize="10" 
+                                       TextColor="#666666" 
+                                       VerticalOptions="Center"/>
+                            </StackLayout>
+
+                            <!-- Affichage des prix (normal et promotionnel) -->
+                            <StackLayout Grid.Column="2" 
+                                         Grid.RowSpan="2"
+                                         VerticalOptions="Center">
+                                <!-- Prix original barré si promotion active -->
+                                <Label IsVisible="{Binding HasActivePromotion}"
+                                       Text="{Binding Prix, StringFormat='{0:F2} €'}" 
+                                       TextColor="#9E9E9E" 
+                                       FontSize="12"
+                                       TextDecorations="Strikethrough"/>
+                                <!-- Prix actuel (normal ou promotion) -->
+                                <Label Text="{Binding PromotionalPrice, StringFormat='{0:F2} €'}" 
+                                       TextColor="#F4B942" 
+                                       FontAttributes="Bold" 
+                                       FontSize="16"/>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.Footer>
+                <StackLayout HeightRequest="20" />
+            </ListView.Footer>
+        </ListView>
+
+        <!-- Indicateur de chargement pendant le chargement des données -->
+        <ActivityIndicator Grid.RowSpan="3" 
+                           IsRunning="{Binding IsLoading}" 
+                           IsVisible="{Binding IsLoading}"
+                           Color="#F4B942"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           Scale="2"/>
+
+        <!-- Message affiché lorsqu'aucun produit n'est disponible -->
+        <StackLayout Grid.Row="2" 
+                     IsVisible="{Binding Products.Count, Converter={StaticResource CountToBoolConverter}, ConverterParameter=0}"
+                     VerticalOptions="Center" 
+                     HorizontalOptions="Center"
+                     Margin="20">
+            <Image Source="dotnet_bot.png" HeightRequest="100" Opacity="0.5"/>
+            <Label Text="Aucun produit disponible" 
+                   TextColor="#666666" 
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,0"
+                   FontSize="18"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>

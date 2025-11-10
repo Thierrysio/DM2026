@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+Page d'accueil de l'application Dantec Market
+Cette page contient:
+- Un en-tête avec logo et message de bienvenue
+- Une bannière promotionnelle
+- Un menu de navigation avec différentes catégories
+- Une section pour les meilleures ventes
+- Un résumé du profil utilisateur et des points de fidélité
+- Un pied de page
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DantecMarketApp.Views.HomePage"
+             xmlns:converters="clr-namespace:DantecMarketApp.Converters"
+             Title="Dantec Market"
+             BackgroundColor="#FAF7F2">
+
+    <!-- Structure principale en grille avec 3 rangées: en-tête, contenu principal, pied de page -->
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- 
+        En-tête: Logo, message de bienvenue et bouton de déconnexion
+        Utilise une grille à 3 colonnes pour l'organisation
+        -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" BackgroundColor="#1F1E1C" Padding="15,20">
+            <!-- Logo circulaire avec découpage en ellipse -->
+            <Image Grid.Column="0"
+                   Source="logo.jpg"
+                   HeightRequest="50"
+                   WidthRequest="50"
+                   VerticalOptions="Center"
+                   Margin="0,0,15,0">
+                <Image.Clip>
+                    <EllipseGeometry Center="25,25" RadiusX="25" RadiusY="25"/>
+                </Image.Clip>
+            </Image>
+
+            <!-- Message de bienvenue avec le nom d'utilisateur en couleur accentuée -->
+            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                <Label x:Name="WelcomeMessage" 
+                       Text="Bonjour"
+                       TextColor="White"
+                       FontSize="18"
+                       FontAttributes="Bold"/>
+                <Label x:Name="UserName" 
+                       Text=""
+                       TextColor="#F4B942"
+                       FontSize="16"/>
+            </VerticalStackLayout>
+
+            <!-- Bouton de déconnexion transparent avec texte coloré -->
+            <Button Grid.Column="2"
+                    Text="Déconnexion"
+                    BackgroundColor="Transparent"
+                    TextColor="#F4B942"
+                    FontSize="14"
+                    Clicked="OnLogoutClicked"
+                    VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- 
+        Contenu principal avec défilement
+        Contient toutes les sections de l'application
+        -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="15" Spacing="20">
+                <!-- 
+                Bannière principale avec image de fond et texte superposé
+                Utilise un effet d'opacité pour assombrir l'image
+                -->
+                <Frame Padding="0" HasShadow="True" CornerRadius="10" IsClippedToBounds="True" HeightRequest="160">
+                    <Grid>
+                        <Image Aspect="AspectFill" Source="login.jpg" Opacity="0.8"/>
+                        <BoxView Color="#80000000"/>
+                        <VerticalStackLayout VerticalOptions="Center" Padding="20">
+                            <Label Text="Plus qu'un magasin..." 
+                                   TextColor="White" 
+                                   FontSize="24" 
+                                   FontAttributes="Bold"/>
+                            <Label Text="Une expérience pédagogique" 
+                                   TextColor="White" 
+                                   FontSize="18"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+                <!-- Titre de la section Menu -->
+                <Label Text="MENU" 
+                       FontSize="18" 
+                       FontAttributes="Bold" 
+                       TextColor="#1F1E1C" 
+                       Margin="5,0,0,5"/>
+
+                <!-- 
+                Menu principal organisé en grille 3x2 
+                Chaque élément est un cadre cliquable avec couleur distinctive
+                -->
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="15">
+                    <!-- 
+                    Nos produits - Position prioritaire avec couleur accentuée
+                    Chaque élément du menu a un gestionnaire de toucher pour la navigation
+                    -->
+                    <Frame Grid.Column="0" Grid.Row="0" 
+                           Padding="0" 
+                           HasShadow="True" 
+                           CornerRadius="10" 
+                           IsClippedToBounds="True" 
+                           HeightRequest="130">
+                        <Grid>
+                            <BoxView Color="#F4B942"/>
+                            <VerticalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image Source="dotnet_bot.png" HeightRequest="60" WidthRequest="60" HorizontalOptions="Center"/>
+                                <Label Text="Nos produits" 
+                                       TextColor="White" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="Center"
+                                       Margin="0,8,0,0"/>
+                            </VerticalStackLayout>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnProductsCategoryTapped"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Rechercher - Couleur bleu #3E92CC -->
+                    <Frame Grid.Column="1" Grid.Row="0" 
+                           Padding="0" 
+                           HasShadow="True" 
+                           CornerRadius="10" 
+                           IsClippedToBounds="True" 
+                           HeightRequest="130">
+                        <Grid>
+                            <BoxView Color="#3E92CC"/>
+                            <VerticalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image Source="dotnet_bot.png" HeightRequest="60" WidthRequest="60" HorizontalOptions="Center"/>
+                                <Label Text="Rechercher" 
+                                       TextColor="White" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="Center"
+                                       Margin="0,8,0,0"/>
+                            </VerticalStackLayout>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSearchTapped"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Mon panier - Couleur gris #70798C -->
+                    <Frame Grid.Column="0" Grid.Row="1" 
+                           Padding="0" 
+                           HasShadow="True" 
+                           CornerRadius="10" 
+                           IsClippedToBounds="True" 
+                           HeightRequest="130">
+                        <Grid>
+                            <BoxView Color="#70798C"/>
+                            <VerticalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image Source="dotnet_bot.png" HeightRequest="60" WidthRequest="60" HorizontalOptions="Center"/>
+                                <Label Text="Mon panier" 
+                                       TextColor="White" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="Center"
+                                       Margin="0,8,0,0"/>
+                            </VerticalStackLayout>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCartTapped"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Mes favoris - Couleur rouge-orangé #D7643D -->
+                    <Frame Grid.Column="1" Grid.Row="1" 
+                           Padding="0" 
+                           HasShadow="True" 
+                           CornerRadius="10" 
+                           IsClippedToBounds="True" 
+                           HeightRequest="130">
+                        <Grid>
+                            <BoxView Color="#D7643D"/>
+                            <VerticalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image Source="dotnet_bot.png" HeightRequest="60" WidthRequest="60" HorizontalOptions="Center"/>
+                                <Label Text="Mes favoris" 
+                                       TextColor="White" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="Center"
+                                       Margin="0,8,0,0"/>
+                            </VerticalStackLayout>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnFavoritesTapped"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Promotions - Couleur marron #8D7B68 -->
+                    <Frame Grid.Column="0" Grid.Row="2" 
+                           Padding="0" 
+                           HasShadow="True" 
+                           CornerRadius="10" 
+                           IsClippedToBounds="True" 
+                           HeightRequest="130">
+                        <Grid>
+                            <BoxView Color="#8D7B68"/>
+                            <VerticalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image Source="dotnet_bot.png" HeightRequest="60" WidthRequest="60" HorizontalOptions="Center"/>
+                                <Label Text="Promotions" 
+                                       TextColor="White" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="Center"
+                                       Margin="0,8,0,0"/>
+                            </VerticalStackLayout>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer  Tapped="OnPromotionsTapped"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Mes commandes - Couleur gris foncé #5A5A5A -->
+                    <Frame Grid.Column="1" Grid.Row="2" 
+                           Padding="0" 
+                           HasShadow="True" 
+                           CornerRadius="10" 
+                           IsClippedToBounds="True" 
+                           HeightRequest="130">
+                        <Grid>
+                            <BoxView Color="#5A5A5A"/>
+                            <VerticalStackLayout Padding="10" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image Source="dotnet_bot.png" HeightRequest="60" WidthRequest="60" HorizontalOptions="Center"/>
+                                <Label Text="Mes commandes" 
+                                       TextColor="White" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="Center"
+                                       Margin="0,8,0,0"/>
+                            </VerticalStackLayout>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOrdersTapped"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+                </Grid>
+
+                <!-- Titre de la section Meilleures Ventes -->
+                <Label Text="MEILLEURES VENTES" 
+       FontSize="18" 
+       FontAttributes="Bold" 
+       TextColor="#1F1E1C" 
+       Margin="5,10,0,5"/>
+
+                <!-- 
+                Carrousel horizontal des produits les plus vendus
+                Utilise CarouselView avec indicateur de position
+                -->
+                <Grid HeightRequest="240">
+                    <CarouselView x:Name="TopSellingCarousel" 
+                        IsSwipeEnabled="True"
+                        Loop="True"
+                        PeekAreaInsets="15"
+                        HorizontalScrollBarVisibility="Never">
+
+                        <CarouselView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" 
+                              ItemSpacing="15" 
+                              SnapPointsType="MandatorySingle" 
+                              SnapPointsAlignment="Center"/>
+                        </CarouselView.ItemsLayout>
+                        <CarouselView.ItemTemplate>
+                            <DataTemplate>
+                                <!-- 
+                                Template de produit pour le carrousel
+                                Affiche image, nom, description, prix et badge de promotion
+                                -->
+                                <Frame WidthRequest="160" 
+                       Padding="0" 
+                       HasShadow="True" 
+                       CornerRadius="10" 
+                       IsClippedToBounds="True"
+                       BorderColor="Transparent">
+                                    <Grid RowDefinitions="120,*">
+                                        <Image Grid.Row="0" 
+                               Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               BackgroundColor="#E0E0E0"/>
+
+                                        <!-- Badge de promotion conditionnellement visible -->
+                                        <Frame Grid.Row="0" 
+                               BackgroundColor="#D7643D" 
+                               Padding="6,2" 
+                               CornerRadius="4"
+                               HasShadow="False"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Start"
+                               Margin="8,8,0,0"
+                               IsVisible="{Binding HasPromo}">
+                                            <Label Text="{Binding DiscountPercentage, StringFormat='-{0}%'}" 
+                                   TextColor="White" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"/>
+                                        </Frame>
+
+                                        <!-- Détails du produit -->
+                                        <VerticalStackLayout Grid.Row="1" Padding="12,8" BackgroundColor="White" Spacing="2">
+                                            <Label Text="{Binding NomProduit}" 
+                                   TextColor="#1F1E1C" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   MaxLines="1"
+                                   LineBreakMode="TailTruncation"/>
+
+                                            <Label Text="{Binding DescriptionCourte}" 
+                                   TextColor="#666666" 
+                                   FontSize="12"
+                                   MaxLines="1"
+                                   LineBreakMode="TailTruncation"/>
+
+                                            <!-- Affichage du prix avec gestion des promotions -->
+                                            <Grid ColumnDefinitions="Auto,*" Margin="0,4,0,0">
+                                                <Label Grid.Column="0" 
+                                       Text="{Binding DisplayPrice, StringFormat='{0:0.00} €'}" 
+                                       TextColor="#F4B942" 
+                                       FontSize="14" 
+                                       FontAttributes="Bold"/>
+
+                                                <Label Grid.Column="1" 
+                                       Text="{Binding Prix, StringFormat='{0:0.00} €'}" 
+                                       TextColor="#999999" 
+                                       FontSize="12" 
+                                       Margin="8,0,0,0"
+                                       TextDecorations="Strikethrough"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding HasPromo}"/>
+                                            </Grid>
+
+                                            <!-- Indicateur de quantité vendue -->
+                                            <Label Text="{Binding QuantiteVendue, StringFormat='{0} vendu(s)'}" 
+                                   TextColor="#3E92CC" 
+                                   FontSize="11"
+                                   HorizontalOptions="End"
+                                   VerticalOptions="End"/>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnTopSellingProductTapped" CommandParameter="{Binding .}"/>
+                                    </Frame.GestureRecognizers>
+                                </Frame>
+                            </DataTemplate>
+                        </CarouselView.ItemTemplate>
+                        <!-- Vue vide si aucun produit n'est disponible -->
+                        <CarouselView.EmptyView>
+                            <StackLayout Padding="20">
+                                <Label Text="Aucun produit disponible pour le moment" 
+                       HorizontalOptions="Center" 
+                       TextColor="#666"/>
+                            </StackLayout>
+                        </CarouselView.EmptyView>
+                    </CarouselView>
+
+                    <!-- Indicateurs de position du carrousel -->
+                    <IndicatorView x:Name="TopSellingIndicators"
+                   SelectedIndicatorColor="#F4B942"
+                   IndicatorColor="#DDDDDD"
+                   IndicatorSize="8"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   Margin="0,0,0,8"/>
+                </Grid>
+
+                <!-- 
+                Section Profil et fidélité
+                Affiche avatar, points de fidélité et barre de progression
+                -->
+                <Frame BorderColor="#F4B942" 
+                       BackgroundColor="White" 
+                       CornerRadius="10" 
+                       HasShadow="True" 
+                       Padding="15" 
+                       Margin="0,5,0,10">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <!-- Avatar utilisateur avec découpage circulaire -->
+                        <Image Grid.Column="0" 
+                               Source="dotnet_bot.png" 
+                               HeightRequest="70" 
+                               WidthRequest="70" 
+                               VerticalOptions="Center">
+                            <Image.Clip>
+                                <EllipseGeometry Center="35,35" RadiusX="35" RadiusY="35"/>
+                            </Image.Clip>
+                        </Image>
+                        <!-- Informations profil et fidélité -->
+                        <VerticalStackLayout Grid.Column="1" Padding="15,0,0,0" Spacing="8">
+                            <Label Text="Mon compte" 
+                                   FontSize="16" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#1F1E1C"/>
+                            <ProgressBar Progress="0.3" 
+                                         ProgressColor="#F4B942" 
+                                         HeightRequest="10"/>
+                            <Label Text="30 points fidélité" 
+                                   TextColor="#666" 
+                                   FontSize="12"/>
+                            <Button Text="Voir mon profil" 
+                                    BackgroundColor="#F4B942" 
+                                    TextColor="White" 
+                                    CornerRadius="20" 
+                                    HeightRequest="35" 
+                                    FontSize="12"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Pied de page avec copyright -->
+        <Grid Grid.Row="2" 
+              BackgroundColor="#1F1E1C" 
+              Padding="15">
+            <Label Text="© 2025 Dantec Market - Une expérience pédagogique" 
+                   HorizontalOptions="Center" 
+                   TextColor="#DDDDDD"
+                   FontSize="12"/>
+        </Grid>
+    </Grid>
+</ContentPage>
