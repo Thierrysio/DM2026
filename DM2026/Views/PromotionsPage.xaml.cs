@@ -1,6 +1,6 @@
-using DM2026.Models;
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using DM2026.Models;
 
 namespace DM2026.Views
 {
@@ -63,7 +63,8 @@ namespace DM2026.Views
                         }
                     }
 
-                    Device.BeginInvokeOnMainThread(() => {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
                         PromotionProducts.Clear();
                         foreach (var product in productsWithPromo)
                         {

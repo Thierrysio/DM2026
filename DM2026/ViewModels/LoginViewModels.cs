@@ -5,9 +5,9 @@ using System.ComponentModel;            // Pour l'interface INotifyPropertyChang
 using System.Runtime.CompilerServices;  // Pour l'attribut CallerMemberName
 using System.Text;                      // Pour la classe StringBuilder
 using System.Text.Json;                 // Pour la sérialisation/désérialisation JSON
+using System.Text.RegularExpressions;   // Pour les expressions régulières (validation d'email)
 using System.Windows.Input;             // Pour les commandes
 using DM2026.Models;           // Pour accéder aux modèles de données
-using System.Text.RegularExpressions;   // Pour les expressions régulières (validation d'email)
 using DM2026.Services;         // Pour accéder aux services
 using DM2026.Views;            // Pour la navigation entre vues
 

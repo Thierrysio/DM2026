@@ -1,6 +1,4 @@
-﻿using DM2026.Views;
-
-namespace DM2026
+﻿namespace DM2026
 {
     public partial class App : Application
     {
@@ -8,7 +6,7 @@ namespace DM2026
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginPage());
+            MainPage = new AppShell();
         }
     }
 }

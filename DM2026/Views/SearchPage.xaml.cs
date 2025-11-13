@@ -1,8 +1,8 @@
-using DM2026.Models;
 using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Windows.Input;
+using DM2026.Models;
 
 namespace DM2026.Views
 {
@@ -15,17 +15,17 @@ namespace DM2026.Views
         private readonly HttpClient _httpClient;
         private string _searchQuery = string.Empty;
         private bool _isLoading = false;
-        
-        public List<Category> ParentCategories 
-        { 
-            get => _parentCategories; 
-            set 
-            { 
+
+        public List<Category> ParentCategories
+        {
+            get => _parentCategories;
+            set
+            {
                 _parentCategories = value;
                 OnPropertyChanged();
-            } 
+            }
         }
-        
+
         public Category SelectedParentCategory
         {
             get => _selectedParentCategory;
@@ -39,7 +39,7 @@ namespace DM2026.Views
                 }
             }
         }
-        
+
         public List<Category> SubCategories
         {
             get => _subCategories;
@@ -70,7 +70,7 @@ namespace DM2026.Views
                 OnPropertyChanged();
             }
         }
-        
+
         public bool IsLoading
         {
             get => _isLoading;
@@ -80,7 +80,7 @@ namespace DM2026.Views
                 OnPropertyChanged();
             }
         }
-        
+
         public ICommand SearchCommand { get; }
         public ICommand SelectCategoryCommand { get; }
         public ICommand ClearSearchCommand { get; }
@@ -92,7 +92,7 @@ namespace DM2026.Views
             _httpClient = new HttpClient { BaseAddress = new Uri("http://213.130.144.159") };
             SearchResults = new ObservableCollection<Product>();
             SubCategories = new List<Category>();
-            
+
             SearchCommand = new Command(async () => await PerformSearch());
             SelectCategoryCommand = new Command<Category>(async (category) => await LoadProductsByCategory(category));
 
@@ -242,7 +242,7 @@ namespace DM2026.Views
             {
                 // Reset selection
                 ((ListView)sender).SelectedItem = null;
-                
+
                 // Navigate to product detail page
                 await Navigation.PushAsync(new ProductDetailPage(product));
                 //await DisplayAlert("Produit sélectionné", $"Vous avez sélectionné: {product.NomProduit}", "OK");
